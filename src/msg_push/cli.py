@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from msg_push.config import MissingTokenError, load_settings
+from msg_push.config import ConfigError, MissingNotificationChannelError, load_settings
 from msg_push.exchange_rate import ExchangeRate, fetch_usdcny_rate
-from msg_push.pushplus import PushPlusError, send_pushplus_message
+from msg_push.notifiers import NotificationDeliveryError, send_configured_notifications
 
 
 def build_message(exchange_rate: ExchangeRate) -> str:
@@ -25,25 +25,28 @@ def build_title() -> str:
 
 
 def main() -> int:
-    settings = load_settings()
-
     try:
+        settings = load_settings()
         exchange_rate = fetch_usdcny_rate(settings.exchange_rate_url)
+        title = build_title()
         message = build_message(exchange_rate)
         print(message)
 
-        send_pushplus_message(
-            token=settings.pushplus_token,
-            title=build_title(),
-            content=message,
-            url=settings.pushplus_url,
-        )
-        print("消息推送成功！")
+        results = send_configured_notifications(settings, title=title, content=message)
+        for result in results:
+            print(f"{result.channel}: success")
         return 0
-    except MissingTokenError as exc:
+    except MissingNotificationChannelError as exc:
         print(f"配置错误：{exc}")
         return 2
-    except (RuntimeError, ValueError, PushPlusError) as exc:
+    except NotificationDeliveryError as exc:
+        for result in exc.results:
+            if result.success:
+                print(f"{result.channel}: success")
+            else:
+                print(f"{result.channel}: failed ({result.error})")
+        return 1
+    except (ConfigError, RuntimeError, ValueError) as exc:
         print(f"运行失败：{exc}")
         return 1
 

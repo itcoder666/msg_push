@@ -5,8 +5,6 @@ from dataclasses import dataclass
 from urllib.error import URLError
 from urllib.request import Request, urlopen
 
-from msg_push.config import MissingTokenError
-
 
 @dataclass(frozen=True)
 class PushPlusResult:
@@ -20,7 +18,7 @@ class PushPlusError(RuntimeError):
 
 def build_pushplus_payload(token: str, title: str, content: str) -> dict[str, str]:
     if not token:
-        raise MissingTokenError("PUSHPLUS_TOKEN is required")
+        raise PushPlusError("PUSHPLUS_TOKEN is required")
 
     return {
         "token": token,
@@ -31,13 +29,13 @@ def build_pushplus_payload(token: str, title: str, content: str) -> dict[str, st
 
 def send_pushplus_message(
     *,
-    token: str | None,
+    token: str,
     title: str,
     content: str,
     url: str,
     timeout: int = 10,
 ) -> PushPlusResult:
-    payload = build_pushplus_payload(token or "", title, content)
+    payload = build_pushplus_payload(token, title, content)
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     request = Request(
         url,

@@ -1,14 +1,13 @@
-from msg_push.config import MissingTokenError
-from msg_push.pushplus import build_pushplus_payload
+from msg_push.pushplus import PushPlusError, build_pushplus_payload
 
 
 def test_build_pushplus_payload_requires_token() -> None:
     try:
         build_pushplus_payload("", "title", "content")
-    except MissingTokenError as exc:
+    except PushPlusError as exc:
         assert "PUSHPLUS_TOKEN" in str(exc)
     else:
-        raise AssertionError("Expected MissingTokenError")
+        raise AssertionError("Expected PushPlusError")
 
 
 def test_build_pushplus_payload_contains_expected_fields() -> None:
