@@ -1,0 +1,63 @@
+from __future__ import annotations
+
+import json
+from dataclasses import dataclass
+from urllib.error import URLError
+from urllib.request import Request, urlopen
+
+from msg_push.config import MissingTokenError
+
+
+@dataclass(frozen=True)
+class PushPlusResult:
+    code: int | None
+    message: str
+
+
+class PushPlusError(RuntimeError):
+    """Raised when PushPlus rejects or cannot process a message."""
+
+
+def build_pushplus_payload(token: str, title: str, content: str) -> dict[str, str]:
+    if not token:
+        raise MissingTokenError("PUSHPLUS_TOKEN is required")
+
+    return {
+        "token": token,
+        "title": title,
+        "content": content,
+    }
+
+
+def send_pushplus_message(
+    *,
+    token: str | None,
+    title: str,
+    content: str,
+    url: str,
+    timeout: int = 10,
+) -> PushPlusResult:
+    payload = build_pushplus_payload(token or "", title, content)
+    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    request = Request(
+        url,
+        data=body,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            raw_response = response.read().decode("utf-8")
+            result = json.loads(raw_response)
+    except URLError as exc:
+        raise PushPlusError(f"Failed to send PushPlus message: {exc}") from exc
+    except json.JSONDecodeError as exc:
+        raise PushPlusError("PushPlus returned invalid JSON") from exc
+
+    code = result.get("code")
+    message = str(result.get("msg") or result.get("message") or result)
+    if code != 200:
+        raise PushPlusError(f"PushPlus send failed: code={code}, message={message}")
+
+    return PushPlusResult(code=code, message=message)
