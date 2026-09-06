@@ -53,6 +53,7 @@ def send_configured_notifications(
                     title=title,
                     content=content,
                     url=settings.pushplus_url,
+                    topic=settings.pushplus_topic,
                 ),
             )
         )

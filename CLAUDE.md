@@ -28,7 +28,7 @@ Supported channels:
 
 A channel is enabled when its required environment variables are configured:
 
-- PushPlus: `PUSHPLUS_TOKEN`
+- PushPlus: `PUSHPLUS_TOKEN` (optionally `PUSHPLUS_TOPIC` for one-to-many group messages)
 - WeChat Work group robot: `WECHAT_WORK_WEBHOOK_URL`
 - WxPusher: `WXPUSHER_APP_TOKEN` plus at least one of `WXPUSHER_UIDS` or `WXPUSHER_TOPIC_IDS`
 

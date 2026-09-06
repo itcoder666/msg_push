@@ -54,6 +54,18 @@ PUSHPLUS_TOKEN=你的_pushplus_token exchange-rate-push
 PUSHPLUS_TOKEN=你的_pushplus_token
 ```
 
+#### 一对多群组推送
+
+PushPlus 支持一对多群组消息：在 PushPlus 后台创建群组后，拿到群组编码，并通过 `PUSHPLUS_TOPIC` 配置即可向群组内所有成员推送。
+
+```bash
+PUSHPLUS_TOKEN=你的_pushplus_token
+PUSHPLUS_TOPIC=你的群组编码
+```
+
+- 只配置 `PUSHPLUS_TOKEN` 时，默认一对一推送到你自己的微信
+- 同时配置 `PUSHPLUS_TOPIC` 时，消息会发送到对应群组（一对多）
+
 ### 企业微信群机器人
 
 配置 `WECHAT_WORK_WEBHOOK_URL` 即启用企业微信群机器人。
@@ -103,6 +115,7 @@ GitHub Actions 的 cron 使用 UTC，因此 workflow 中配置的是：
 | Secret | 是否必填 | 启用渠道 | 说明 |
 | --- | --- | --- | --- |
 | `PUSHPLUS_TOKEN` | 否 | PushPlus | 配置后启用 PushPlus |
+| `PUSHPLUS_TOPIC` | 否 | PushPlus | 群组编码，配置后 PushPlus 一对多推送 |
 | `WECHAT_WORK_WEBHOOK_URL` | 否 | 企业微信群机器人 | 配置后启用企业微信群机器人 |
 | `WXPUSHER_APP_TOKEN` | 否 | WxPusher | WxPusher app token |
 | `WXPUSHER_UIDS` | 否 | WxPusher | 多个 UID 用英文逗号分隔 |
@@ -115,6 +128,7 @@ GitHub Actions 的 cron 使用 UTC，因此 workflow 中配置的是：
 | 环境变量 | 必填 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `PUSHPLUS_TOKEN` | 否 | 无 | 配置后启用 PushPlus |
+| `PUSHPLUS_TOPIC` | 否 | 无 | PushPlus 群组编码，用于一对多推送 |
 | `WECHAT_WORK_WEBHOOK_URL` | 否 | 无 | 配置后启用企业微信群机器人 |
 | `WXPUSHER_APP_TOKEN` | 否 | 无 | WxPusher app token |
 | `WXPUSHER_UIDS` | 否 | 无 | WxPusher UID 列表，英文逗号分隔 |

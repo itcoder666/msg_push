@@ -15,6 +15,7 @@ class ConfigError(RuntimeError):
 @dataclass(frozen=True)
 class Settings:
     pushplus_token: str | None
+    pushplus_topic: str | None
     wechat_work_webhook_url: str | None
     wxpusher_app_token: str | None
     wxpusher_uids: tuple[str, ...]
@@ -51,6 +52,7 @@ def parse_topic_ids(value: str | None) -> tuple[int, ...]:
 def load_settings() -> Settings:
     return Settings(
         pushplus_token=os.environ.get("PUSHPLUS_TOKEN"),
+        pushplus_topic=os.environ.get("PUSHPLUS_TOPIC"),
         wechat_work_webhook_url=os.environ.get("WECHAT_WORK_WEBHOOK_URL"),
         wxpusher_app_token=os.environ.get("WXPUSHER_APP_TOKEN"),
         wxpusher_uids=parse_csv_values(os.environ.get("WXPUSHER_UIDS")),

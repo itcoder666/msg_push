@@ -18,3 +18,19 @@ def test_build_pushplus_payload_contains_expected_fields() -> None:
         "title": "汇率日报",
         "content": "当前汇率",
     }
+
+
+def test_build_pushplus_payload_includes_topic_for_group() -> None:
+    payload = build_pushplus_payload(
+        "token-value",
+        "汇率日报",
+        "当前汇率",
+        topic="group-code",
+    )
+
+    assert payload == {
+        "token": "token-value",
+        "title": "汇率日报",
+        "content": "当前汇率",
+        "topic": "group-code",
+    }

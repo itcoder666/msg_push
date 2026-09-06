@@ -11,6 +11,7 @@ from msg_push.pushplus import PushPlusError
 def make_settings(**overrides: object) -> Settings:
     values = {
         "pushplus_token": None,
+        "pushplus_topic": None,
         "wechat_work_webhook_url": None,
         "wxpusher_app_token": None,
         "wxpusher_uids": (),

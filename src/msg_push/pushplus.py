@@ -16,15 +16,25 @@ class PushPlusError(RuntimeError):
     """Raised when PushPlus rejects or cannot process a message."""
 
 
-def build_pushplus_payload(token: str, title: str, content: str) -> dict[str, str]:
+def build_pushplus_payload(
+    token: str,
+    title: str,
+    content: str,
+    *,
+    topic: str | None = None,
+) -> dict[str, str]:
     if not token:
         raise PushPlusError("PUSHPLUS_TOKEN is required")
 
-    return {
+    payload = {
         "token": token,
         "title": title,
         "content": content,
     }
+    if topic:
+        payload["topic"] = topic
+
+    return payload
 
 
 def send_pushplus_message(
@@ -33,9 +43,10 @@ def send_pushplus_message(
     title: str,
     content: str,
     url: str,
+    topic: str | None = None,
     timeout: int = 10,
 ) -> PushPlusResult:
-    payload = build_pushplus_payload(token, title, content)
+    payload = build_pushplus_payload(token, title, content, topic=topic)
     body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     request = Request(
         url,
