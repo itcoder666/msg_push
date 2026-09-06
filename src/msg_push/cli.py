@@ -1,4 +1,5 @@
 from __future__ import annotations
+from datetime import datetime
 
 from msg_push.config import ConfigError, MissingNotificationChannelError, load_settings
 from msg_push.exchange_rate import ExchangeRate, fetch_usdcny_rate
@@ -14,6 +15,7 @@ def build_message(exchange_rate: ExchangeRate) -> str:
             if part
         )
         suffix = f"\n数据时间：{source_at}"
+        suffix = suffix + f"\n查询时间 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
 
     return f"当前美元兑人民币汇率为：1 USD = {exchange_rate.rate:.4f} CNY{suffix}"
 
