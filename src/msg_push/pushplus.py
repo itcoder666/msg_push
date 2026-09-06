@@ -55,6 +55,9 @@ def send_pushplus_message(
 
     code = result.get("code")
     message = str(result.get("msg") or result.get("message") or result)
+    data = result.get("data")
+    if data is not None:
+        message = f"{message}, data={data}"
     if code != 200:
         raise PushPlusError(f"PushPlus send failed: code={code}, message={message}")
 

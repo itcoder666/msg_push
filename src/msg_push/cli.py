@@ -20,15 +20,17 @@ def build_message(exchange_rate: ExchangeRate) -> str:
     return f"当前美元兑人民币汇率为：1 USD = {exchange_rate.rate:.4f} CNY{suffix}"
 
 
-def build_title() -> str:
-    return f"汇率日报 {datetime.now().strftime('%Y-%m-%d')}"
-
+# def build_title() -> str:
+#     return f"汇率日报 {datetime.now().strftime('%Y-%m-%d')}"
+def build_title(exchange_rate: ExchangeRate) -> str:
+    return f"汇率:1USD={exchange_rate.rate:.4f}CNY"
 
 def main() -> int:
     try:
         settings = load_settings()
         exchange_rate = fetch_usdcny_rate(settings.exchange_rate_url)
-        title = build_title()
+        # title = build_title()
+        title = build_title(exchange_rate)
         message = build_message(exchange_rate)
         print(message)
 
