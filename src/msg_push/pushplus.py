@@ -33,8 +33,6 @@ def build_pushplus_payload(
     }
     if topic:
         payload["topic"] = topic
-        print(f"pushplus topic: {topic}")
-    print(f"pushplus topic: {topic}")
     return payload
 
 
