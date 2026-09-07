@@ -23,11 +23,11 @@ def parse_sina_usdcny_response(body: str) -> ExchangeRate:
         raise ValueError(f"Unexpected Sina response format: {body!r}")
 
     fields = match.group("data").split(",")
-    if len(fields) < 4:
+    if len(fields) < 17:
         raise ValueError(f"Sina response has insufficient fields: {fields!r}")
 
     try:
-        rate = float(fields[3])
+        rate = float(fields[8])
     except ValueError as exc:
         raise ValueError(f"Invalid USD/CNY rate value: {fields[3]!r}") from exc
 
