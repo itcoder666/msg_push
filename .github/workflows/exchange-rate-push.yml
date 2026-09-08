@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   schedule:
     # GitHub Actions cron uses UTC. 02:00 UTC = 10:00 Asia/Shanghai.
-    - cron: "0 2 * * *"
+    - cron: "0 * * * *"
 
 permissions:
   contents: read
